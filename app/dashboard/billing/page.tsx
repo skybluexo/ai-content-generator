@@ -16,51 +16,52 @@ function billing() {
   );
 
   const CreateSubscription = () => {
-    setLoading(true);
-    axio.post("/api/create-subscription", {}).then(
-      (resp) => {
-        console.log(resp.data);
-        OnPayment(resp.data.id);
-      },
-      (error) => {
-        setLoading(false);
-      }
-    );
+    //textx
+    // setLoading(true);
+    // axio.post("/api/create-subscription", {}).then(
+    //   (resp) => {
+    //     console.log(resp.data);
+    //     OnPayment(resp.data.id);
+    //   },
+    //   (error) => {
+    //     setLoading(false);
+    //   }
+    // );
   };
 
-  const OnPayment = (subId: string) => {
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      subscription_id: subId,
-      name: "Francis Cho AI Apps",
-      description: "Monthly Subscription",
-      handler: async (resp: any) => {
-        console.log(resp);
-        if (resp) {
-          SaveSubcription(resp?.razorpay_payment_id);
-        }
-        setLoading(false);
-      },
-    };
+  // const OnPayment = (subId: string) => {
+  //   const options = {
+  //     key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  //     subscription_id: subId,
+  //     name: "Francis Cho AI Apps",
+  //     description: "Monthly Subscription",
+  //     handler: async (resp: any) => {
+  //       console.log(resp);
+  //       if (resp) {
+  //         SaveSubcription(resp?.razorpay_payment_id);
+  //       }
+  //       setLoading(false);
+  //     },
+  //   };
 
-    // @ts-ignore
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  };
+  //   // @ts-ignore
+  //   //testx const rzp = new window.Razorpay(options);
+  //   //testx rzp.open();
+  // };
 
-  const SaveSubcription = async (paymentId: string) => {
-    const result = await db.insert(UserSubscription).values({
-      email: user?.primaryEmailAddress?.emailAddress,
-      userName: user?.fullName,
-      active: true,
-      paymentId: paymentId,
-      joinDate: moment().format("DD/MM/yyyy"),
-    });
-    console.log(result);
-    if (result) {
-      window.location.reload();
-    }
-  };
+  // const SaveSubcription = async (paymentId: string) => {
+  //   const result = await db.insert(UserSubscription).values({
+  //     email: user?.primaryEmailAddress?.emailAddress,
+  //     userName: user?.fullName,
+  //     active: true,
+  //     paymentId: paymentId,
+  //     joinDate: moment().format("DD/MM/yyyy"),
+  //   });
+  //   console.log(result);
+  //   if (result) {
+  //     window.location.reload();
+  //   }
+  // };
 
   return (
     <div>

@@ -24,7 +24,6 @@ interface PROPS{
     }
 }
 
-
 function CreateNewContent(props:PROPS) {
    
     const selectedTemplate:TEMPLATE|undefined=Templates?.find((item)=>item.slug==props.params['template-slug']);
@@ -41,7 +40,7 @@ function CreateNewContent(props:PROPS) {
      * @returns 
      */
     const GenerateAIContent=async(formData:any)=>{
-        if(totalUsage>=10000&&!userSubscription)
+        if(totalUsage>=10000000&&!userSubscription)//10000 testnow
             {
                 console.log("Please Upgrade");
                 router.push('/dashboard/billing')

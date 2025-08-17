@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import Razorpay from 'razorpay'
 
+//delete this file after testing - testx
 export async function POST(req,res){
     let instance=new Razorpay({
         key_id:process.env.RAZORPAY_KEY_ID,
