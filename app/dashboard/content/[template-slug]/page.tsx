@@ -39,6 +39,40 @@ function CreateNewContent(props:PROPS) {
      * @param formData 
      * @returns 
      */
+    // Function to clean RTF formatting from AI response
+    const cleanRTFText = (text: string): string => {
+        if (!text) return '';
+        
+        let cleaned = text;
+        
+        // Remove RTF code blocks
+        cleaned = cleaned.replace(/```rtf\s*\{[\s\S]*?\}\s*```/g, '');
+        cleaned = cleaned.replace(/```rtf\s*([\s\S]*?)\s*```/g, '$1');
+        
+        // Remove RTF document structure
+        cleaned = cleaned.replace(/\{\\rtf1\\ansi[\s\S]*?\}/g, '');
+        cleaned = cleaned.replace(/\\rtf1\\ansi[\s\S]*?\{/g, '');
+        
+        // Remove RTF control words and groups
+        cleaned = cleaned.replace(/\\[a-z]+\d*\s?/g, '');
+        cleaned = cleaned.replace(/\{[^}]*\}/g, '');
+        cleaned = cleaned.replace(/\\par\s?/g, '\n');
+        cleaned = cleaned.replace(/\\line\s?/g, '\n');
+        
+        // Remove font and formatting commands
+        cleaned = cleaned.replace(/\\f\d+\s?/g, '');
+        cleaned = cleaned.replace(/\\fs\d+\s?/g, '');
+        cleaned = cleaned.replace(/\\cf\d+\s?/g, '');
+        cleaned = cleaned.replace(/\\cb\d+\s?/g, '');
+        
+        // Clean up extra whitespace and normalize line breaks
+        cleaned = cleaned.replace(/\s+/g, ' ');
+        cleaned = cleaned.replace(/\n\s*\n/g, '\n');
+        cleaned = cleaned.trim();
+        
+        return cleaned;
+    };
+
     const GenerateAIContent=async(formData:any)=>{
         if(totalUsage>=10000000&&!userSubscription)//10000 testnow
             {
@@ -51,8 +85,14 @@ function CreateNewContent(props:PROPS) {
         const FinalAIPrompt=JSON.stringify(formData)+", "+SelectedPrompt;
         const result=await chatSession.sendMessage(FinalAIPrompt);
         
-        setAiOutput(result?.response.text());
-        await SaveInDb(JSON.stringify(formData),selectedTemplate?.slug,result?.response.text())
+        const rawResponse = result?.response.text();
+        console.log('Raw AI Response:', rawResponse);
+        
+        const cleanedResponse = cleanRTFText(rawResponse);
+        console.log('Cleaned AI Response:', cleanedResponse);
+        
+        setAiOutput(cleanedResponse);
+        await SaveInDb(JSON.stringify(formData),selectedTemplate?.slug,cleanedResponse)
         setLoading(false);
         
         setUpdateCreditUsage(Date.now())
