@@ -88,7 +88,7 @@ function CreateNewContent(props:PROPS) {
         const rawResponse = result?.response.text();
         console.log('Raw AI Response:', rawResponse);
         
-        const cleanedResponse = cleanRTFText(rawResponse);
+        const cleanedResponse = (rawResponse);//cleanRTFText
         console.log('Cleaned AI Response:', cleanedResponse);
         
         setAiOutput(cleanedResponse);
